@@ -50,6 +50,7 @@ cd ${WORK_DIR}
 
 echo "Exporting all objects from namespace '${NAMESPACE}'..."
 ${K8S_EXECUTABLE} get-all \
+    --exclude builds,events,imagetags,imagestreamtags,packagemanifests \
     -n "${NAMESPACE}" \
     -o yaml \
     > "${WORK_DIR}/export.yaml"
