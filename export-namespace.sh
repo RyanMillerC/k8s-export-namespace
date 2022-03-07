@@ -30,17 +30,19 @@ elif [[ -d ${NAMESPACE} ]] ; then
     >&2 echo "./${NAMESPACE} already exists!"
     exit 1
 elif ! command -v kubectl-krew &> /dev/null ; then
-    >&2 echo "'${K8S_EXECUTABLE} krew' not found. Install krew, then:" \
-             "'${K8S_EXECUTABLE} krew install get_all" \
-             "'${K8S_EXECUTABLE} krew install slice"
+    >&2 echo "'${K8S_EXECUTABLE} krew' not found. Install krew:"
+    >&2 echo '* https://krew.sigs.k8s.io/docs/user-guide/setup/install'
+    >&2 echo 'Then install:'
+    >&2 echo "* '${K8S_EXECUTABLE} krew install get_all'"
+    >&2 echo "* '${K8S_EXECUTABLE} krew install slice'"
     exit 1
 elif ! command -v kubectl-get_all &> /dev/null ; then
-    >&2 echo "'${K8S_EXECUTABLE} get-all' not found. Install with krew:" \
-             "'${K8S_EXECUTABLE} krew install get_all"
+    >&2 echo "'${K8S_EXECUTABLE} get-all' not found. Install with krew:"
+    >&2 echo "'${K8S_EXECUTABLE} krew install get_all"
     exit 1
 elif ! command -v kubectl-slice &> /dev/null ; then
-    >&2 echo "'${K8S_EXECUTABLE} slice' not found. Install with krew:" \
-             "'${K8S_EXECUTABLE} krew install slice"
+    >&2 echo "'${K8S_EXECUTABLE} slice' not found. Install with krew:"
+    >&2 echo "'${K8S_EXECUTABLE} krew install slice"
     exit 1
 fi
 
