@@ -5,18 +5,23 @@
 #
 # USAGE: ./export-namespace.sh NAMESPACE
 #
-# This script requires the following krew plugins:
+# This script requires the following kubectl plugins installed either manually
+# or with 'krew' (https://krew.sigs.k8s.io/docs/user-guide/setup/install):
 #
 # - `$ kubectl krew install get-all`
+# - `$ kubectl krew install neat`
 # - `$ kubectl krew install slice`
 #
-# Install krew here: https://krew.sigs.k8s.io/docs/user-guide/setup/install
+# To use a different Kuberentes CLI (OpenShift), set 'K8S_EXECUTABLE' with:
+# `$ export K8S_EXECUTABLE='oc'`
 #
 
 set -e
 
-# Change to oc if you don't have kubectl
-K8S_EXECUTABLE='kubectl'
+# Default to 'kubectl' but allow custom Kuberentes CLI
+if [[ -z ${K8S_EXECUTABLE} ]] ; then
+    K8S_EXECUTABLE='kubectl'
+fi
 
 # Don't change these...
 NAMESPACE="${1}"
@@ -29,19 +34,20 @@ if [[ -z ${NAMESPACE} ]] ; then
 elif [[ -d ${NAMESPACE} ]] ; then
     >&2 echo "./${NAMESPACE} already exists!"
     exit 1
-elif ! command -v kubectl-krew &> /dev/null ; then
-    >&2 echo "'${K8S_EXECUTABLE} krew' not found. Install krew:"
-    >&2 echo '* https://krew.sigs.k8s.io/docs/user-guide/setup/install'
-    >&2 echo 'Then install:'
-    >&2 echo "* '${K8S_EXECUTABLE} krew install get_all'"
-    >&2 echo "* '${K8S_EXECUTABLE} krew install slice'"
+elif ! command -v ${K8S_EXECUTABLE} &> /dev/null ; then
+    >&2 echo "'${K8S_EXECUTABLE}' not found."
+    >&2 echo "If you need to use 'oc' instead of 'kubectl' set 'export K8S_EXECUTABLE=oc'"
     exit 1
 elif ! command -v kubectl-get_all &> /dev/null ; then
-    >&2 echo "'${K8S_EXECUTABLE} get-all' not found. Install with krew:"
+    >&2 echo "'${K8S_EXECUTABLE} get-all' not found. Install manually or with krew:"
     >&2 echo "'${K8S_EXECUTABLE} krew install get_all"
     exit 1
+elif ! command -v kubectl-neat &> /dev/null ; then
+    >&2 echo "'${K8S_EXECUTABLE} neat' not found. Install manually or with krew:"
+    >&2 echo "'${K8S_EXECUTABLE} krew install neat'"
+    exit 1
 elif ! command -v kubectl-slice &> /dev/null ; then
-    >&2 echo "'${K8S_EXECUTABLE} slice' not found. Install with krew:"
+    >&2 echo "'${K8S_EXECUTABLE} slice' not found. Install manually or with krew:"
     >&2 echo "'${K8S_EXECUTABLE} krew install slice"
     exit 1
 fi
